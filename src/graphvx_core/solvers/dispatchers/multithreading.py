@@ -1,8 +1,7 @@
-from concurrent.futures import ProcessPoolExecutor, as_completed, ThreadPoolExecutor, wait
+from concurrent.futures import ThreadPoolExecutor, wait
 from itertools import batched
 
 from graphvx_core.solvers.dispatchers.dispatcher import Dispatcher
-from graphvx_core.solvers.utils import UpdateType
 
 
 class MultiThreadingDispatcher(Dispatcher):

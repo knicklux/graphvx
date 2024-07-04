@@ -1,6 +1,3 @@
-import builtins
-import multiprocessing
-import numbers
 import sys
 from copy import copy
 
@@ -8,10 +5,6 @@ from graphvx_core.hooks import *
 from graphvx_core.vectorizer.cvxpy_vectorizer import *
 from graphvx_core.vectorizer.numpy_vectorizer import *
 from scipy.sparse import lil_matrix
-
-# TODO: find out, why Goldberg2014 alpha does not work
-# magic_alpha = .5
-# magic_alpha = 1.0
 
 X_NID: int = 0
 X_OBJ: int = 1

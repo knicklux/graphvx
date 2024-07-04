@@ -1,12 +1,6 @@
-import builtins
 import multiprocessing
 import sys
 from collections import defaultdict
-from copy import copy
-from dataclasses import dataclass, field
-from typing import Callable, Any, Optional
-from abc import ABC, abstractmethod
-from enum import Enum
 
 import numpy as np
 import cvxpy as cp
@@ -16,9 +10,6 @@ from graphvx_core.hooks import *
 from graphvx_core.vectorizer.cvxpy_vectorizer import *
 from graphvx_core.vectorizer.numpy_vectorizer import *
 from graphvx_core.solvers.utils import rho_context
-from graphvx_core.graphvx import X_NID, X_OBJ, X_VARS, X_CON, X_IND, X_LEN, X_DEG, X_NEIGHBORS, X_VECTIZER
-from graphvx_core.graphvx import Z_EID, Z_OBJ, Z_CON, Z_IVARS, Z_ILEN, Z_XIIND, Z_ZIJIND, Z_UIJIND
-from graphvx_core.graphvx import Z_JVARS, Z_JLEN, Z_XJIND, Z_ZJIIND, Z_UJIIND
 from graphvx_core.solvers.iteration_solvers.iteration_solver import IterationSolverX, IterationSolverZ
 from graphvx_core.solvers.dispatchers.dispatcher import Dispatcher
 from graphvx_core.solvers.iteration_schemes.iteration_scheme import IterationScheme

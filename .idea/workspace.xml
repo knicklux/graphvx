@@ -10,6 +10,10 @@
   <component name="ChangeListManager">
     <list default="true" id="5c9c2c19-9029-446e-9e54-1742ddf0f84c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/graphvx_core/graphvx.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/graphvx_core/graphvx.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/graphvx_core/solvers/cvxpy_admm.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/graphvx_core/solvers/cvxpy_admm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/graphvx_core/solvers/dispatchers/multiprocessing.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/graphvx_core/solvers/dispatchers/multiprocessing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/graphvx_core/solvers/dispatchers/multithreading.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/graphvx_core/solvers/dispatchers/multithreading.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/graphvx_core/solvers/iteration_solvers/cvxpy_admm_solvers.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/graphvx_core/solvers/iteration_solvers/cvxpy_admm_solvers.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

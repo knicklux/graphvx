@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Callable, Any, Optional
+from typing import Callable, Any
 import numbers
 from copy import copy
 import multiprocessing

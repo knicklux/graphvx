@@ -4,7 +4,6 @@ from itertools import batched
 from tqdm import tqdm
 
 from graphvx_core.solvers.dispatchers.dispatcher import Dispatcher
-from graphvx_core.solvers.utils import UpdateType
 
 
 class MultiProcessingDispatcher(Dispatcher):
