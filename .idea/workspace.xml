@@ -9,46 +9,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5c9c2c19-9029-446e-9e54-1742ddf0f84c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/graphvx.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LICENSE" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/examples/basic_example.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/examples/gpu_test.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/examples/monolithic_example.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/examples/random_test.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/graphvx_core/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/graphvx_core/graph_converter.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/graphvx_core/graphvx.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/graphvx_core/hooks.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/graphvx_core/solvers/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/graphvx_core/solvers/cvxpy_admm.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/graphvx_core/solvers/dispatchers/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/graphvx_core/solvers/dispatchers/dispatcher.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/graphvx_core/solvers/dispatchers/multiprocessing.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/graphvx_core/solvers/dispatchers/multithreading.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/graphvx_core/solvers/dispatchers/sequential.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/graphvx_core/solvers/iteration_schemes/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/graphvx_core/solvers/iteration_schemes/admm_fast.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/graphvx_core/solvers/iteration_schemes/admm_nesterov.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/graphvx_core/solvers/iteration_schemes/admm_nesterov_reset.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/graphvx_core/solvers/iteration_schemes/admm_vanilla.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/graphvx_core/solvers/iteration_schemes/iteration_scheme.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/graphvx_core/solvers/iteration_solvers/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/graphvx_core/solvers/iteration_solvers/cvxpy_admm_solvers.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/graphvx_core/solvers/iteration_solvers/iteration_solver.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/graphvx_core/solvers/monolithic.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/graphvx_core/solvers/utils.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/graphvx_core/vectorizer/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/graphvx_core/vectorizer/cvxpy_vectorizer.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/graphvx_core/vectorizer/numpy_vectorizer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/graphvx_core/solvers/iteration_solvers/cvxpy_admm_solvers.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/graphvx_core/solvers/iteration_solvers/cvxpy_admm_solvers.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

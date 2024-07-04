@@ -60,7 +60,6 @@ class CvxpyADMMX(IterationSolverX):
         self.z_length = 0
 
         self.manager = multiprocessing.Manager()
-        admm_context_x.node_vals = self.manager.dict()
 
     def prepare(self, g: GraphVX):
 
@@ -80,6 +79,8 @@ class CvxpyADMMX(IterationSolverX):
         self.x_length = g.x_length
         self.z_length = g.z_length
 
+        admm_context_x.node_vals = multiprocessing.Array('d', np.zeros((self.x_length,), dtype=np.float64))
+
     @staticmethod
     def solve(items):
         ADMM_x_lambda(items)
@@ -94,12 +95,12 @@ class CvxpyADMMX(IterationSolverX):
             for (varID, varName, var, offset) in edge[Z_IVARS]:
                 size = var.size[0] if hasattr(var.size, '__len__') else var.size
                 value = p[edge[Z_ZIJIND] + offset: edge[Z_ZIJIND] + offset + size]
-                setValue(admm_context_z.edge_z_vals, edge[Z_ZIJIND] + offset, value)
+                setValue(admm_context_z.edge_z_vals, edge[Z_ZIJIND] + offset, size, value)
 
             for (varID, varName, var, offset) in edge[Z_JVARS]:
                 size = var.size[0] if hasattr(var.size, '__len__') else var.size
                 value = p[edge[Z_ZJIIND] + offset: edge[Z_ZJIIND] + offset + size]
-                setValue(admm_context_z.edge_z_vals, edge[Z_ZJIIND] + offset, value)
+                setValue(admm_context_z.edge_z_vals, edge[Z_ZJIIND] + offset, size, value)
 
     def get_new_primal_values(self, p: np.array):
         # target = np.zeros((self.x_length,), dtype=np.float64)
@@ -123,8 +124,6 @@ class CvxpyADMMZ(IterationSolverZ):
         self.z_length = 0
 
         self.manager = multiprocessing.Manager()
-        admm_context_z.edge_z_vals = self.manager.dict()
-        admm_context_z.edge_u_vals = self.manager.dict()
 
     def prepare(self, g: GraphVX):
 
@@ -145,6 +144,9 @@ class CvxpyADMMZ(IterationSolverZ):
         self.x_length = g.x_length
         self.z_length = g.z_length
 
+        admm_context_z.edge_z_vals = multiprocessing.Array('d', np.zeros((self.z_length,), dtype=np.float64))
+        admm_context_z.edge_u_vals = multiprocessing.Array('d', np.zeros((self.z_length,), dtype=np.float64))
+
     @staticmethod
     def solve(items):
         ADMM_z_lambda(items)
@@ -157,7 +159,7 @@ class CvxpyADMMZ(IterationSolverZ):
             for (varID, varName, var, offset) in node[X_VARS]:
                 size = var.size[0] if hasattr(var.size, '__len__') else var.size
                 value = p[node[X_IND] + offset: node[X_IND] + offset + size]
-                setValue(admm_context_x.node_vals, node[X_IND] + offset, value)
+                setValue(admm_context_x.node_vals, node[X_IND] + offset, size, value)
 
     def get_new_primal_values(self, p: np.array):
         # target = np.zeros((self.z_length,), dtype=np.float64)
@@ -196,12 +198,12 @@ class CvxpyADMMZ(IterationSolverZ):
             for (varID, varName, var, offset) in edge[Z_IVARS]:
                 size = var.size[0] if hasattr(var.size, '__len__') else var.size
                 value = d[edge[Z_UIJIND] + offset: edge[Z_UIJIND] + offset + size]
-                setValue(admm_context_z.edge_u_vals, edge[Z_UIJIND] + offset, value)
+                setValue(admm_context_z.edge_u_vals, edge[Z_UIJIND] + offset, size, value)
 
             for (varID, varName, var, offset) in edge[Z_JVARS]:
                 size = var.size[0] if hasattr(var.size, '__len__') else var.size
                 value = d[edge[Z_UJIIND] + offset: edge[Z_UJIIND] + offset + size]
-                setValue(admm_context_z.edge_u_vals, edge[Z_UJIIND] + offset, value)
+                setValue(admm_context_z.edge_u_vals, edge[Z_UJIIND] + offset, size, value)
 
 
 def ADMM_x_problem(entry, rho=None, m_func=cp.Minimize):
@@ -409,14 +411,14 @@ def ADMM_z_lambda(e):
 
 # Extract a numpy array value from a shared Array.
 # Give shared array, starting index, and total length.
-def getValue(shared, idx, length):
-    return np.array(shared[idx])
+def getValue(shared, idx, size):
+    return np.array(shared[idx:idx+size])
 
 
 # Write value of numpy array nparr (with given length) to a shared Array at
 # the given starting index.
-def setValue(shared, idx, val):
-    shared[idx] = np.asarray(val)
+def setValue(shared, idx, size, val):
+    shared[idx:idx+size] = np.asarray(val)
 
 
 # Write the values for all of the Variables involved in a given Objective to
@@ -431,4 +433,5 @@ def setValue(shared, idx, val):
 #                 break
 def writeObjective(shared, idx, objective, variables, devectorize):
     for (varID, varName, var, offset) in variables:
-        setValue(shared, idx + offset, npVectorizer.auto(np.array(var.value))[0])
+        size = var.size[0] if hasattr(var.size, '__len__') else var.size
+        setValue(shared, idx + offset, size, npVectorizer.auto(np.array(var.value))[0])
