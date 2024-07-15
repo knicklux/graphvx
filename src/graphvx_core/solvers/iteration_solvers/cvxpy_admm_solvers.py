@@ -93,7 +93,7 @@ class CvxpyADMMX(IterationSolverX):
         for edge in self.edge_list:
 
             for (varID, varName, var, offset) in edge[Z_IVARS]:
-                size = var.size[0] if hasattr(var.size, '__len__') else var.size
+                size = cpVectorizer.get_var_size(var)
                 value = p[edge[Z_ZIJIND] + offset: edge[Z_ZIJIND] + offset + size]
                 setValue(admm_context_z.edge_z_vals, edge[Z_ZIJIND] + offset, size, value)
 
@@ -106,7 +106,7 @@ class CvxpyADMMX(IterationSolverX):
         # target = np.zeros((self.x_length,), dtype=np.float64)
         for (node, _) in self.node_lentries:
             for (varID, varName, var, offset) in node[X_VARS]:
-                size = var.size[0] if hasattr(var.size, '__len__') else var.size
+                size = cpVectorizer.get_var_size(var)
                 value = getValue(admm_context_x.node_vals, node[X_IND], size)
                 p[node[X_IND] + offset: node[X_IND] + offset + size] = value
 
@@ -157,7 +157,7 @@ class CvxpyADMMZ(IterationSolverZ):
     def set_primal(self, p: np.array):
         for node in self.node_list:
             for (varID, varName, var, offset) in node[X_VARS]:
-                size = var.size[0] if hasattr(var.size, '__len__') else var.size
+                size = cpVectorizer.get_var_size(var)
                 value = p[node[X_IND] + offset: node[X_IND] + offset + size]
                 setValue(admm_context_x.node_vals, node[X_IND] + offset, size, value)
 
@@ -167,12 +167,12 @@ class CvxpyADMMZ(IterationSolverZ):
         for (edge, _) in self.edge_lentries:
 
             for (varID, varName, var, offset) in edge[Z_IVARS]:
-                size = var.size[0] if hasattr(var.size, '__len__') else var.size
+                size = cpVectorizer.get_var_size(var)
                 value = getValue(admm_context_z.edge_z_vals, edge[Z_ZIJIND] + offset, size)
                 p[edge[Z_ZIJIND] + offset: edge[Z_ZIJIND] + offset + size] = value
 
             for (varID, varName, var, offset) in edge[Z_JVARS]:
-                size = var.size[0] if hasattr(var.size, '__len__') else var.size
+                size = cpVectorizer.get_var_size(var)
                 value = getValue(admm_context_z.edge_z_vals, edge[Z_ZJIIND] + offset, size)
                 p[edge[Z_ZJIIND] + offset: edge[Z_ZJIIND] + offset + size] = value
 
@@ -182,13 +182,14 @@ class CvxpyADMMZ(IterationSolverZ):
         for (edge, _) in self.edge_lentries:
 
             for (varID, varName, var, offset) in edge[Z_IVARS]:
-                size = var.size[0] if hasattr(var.size, '__len__') else var.size
+                size = cpVectorizer.get_var_size(var)
                 value = getValue(admm_context_z.edge_u_vals, edge[Z_UIJIND] + offset, size)
                 d[edge[Z_UIJIND] + offset: edge[Z_UIJIND] + offset + size] = value
 
             for (varID, varName, var, offset) in edge[Z_JVARS]:
-                size = var.size[0] if hasattr(var.size, '__len__') else var.size
-                value = getValue(admm_context_z.edge_u_vals, edge[Z_UJIIND] + offset, size)
+                size = cpVectorizer.get_var_size(var)
+                value = getValue(admm_context_z.edge_u_vals, edge[Z_UJIIND] +
+                                 offset, size)
                 d[edge[Z_UJIIND] + offset: edge[Z_UJIIND] + offset + size] = value
 
     def set_dual(self, d: np.array):
@@ -196,12 +197,12 @@ class CvxpyADMMZ(IterationSolverZ):
         for (edge, _) in self.edge_lentries:
 
             for (varID, varName, var, offset) in edge[Z_IVARS]:
-                size = var.size[0] if hasattr(var.size, '__len__') else var.size
+                size = cpVectorizer.get_var_size(var)
                 value = d[edge[Z_UIJIND] + offset: edge[Z_UIJIND] + offset + size]
                 setValue(admm_context_z.edge_u_vals, edge[Z_UIJIND] + offset, size, value)
 
             for (varID, varName, var, offset) in edge[Z_JVARS]:
-                size = var.size[0] if hasattr(var.size, '__len__') else var.size
+                size = cpVectorizer.get_var_size(var)
                 value = d[edge[Z_UJIIND] + offset: edge[Z_UJIIND] + offset + size]
                 setValue(admm_context_z.edge_u_vals, edge[Z_UJIIND] + offset, size, value)
 
@@ -226,7 +227,7 @@ def ADMM_x_problem(entry, rho=None, m_func=cp.Minimize):
         z_params_i = []
         u_params_i = []
         for j, (varID, varName, var, offset) in enumerate(variables):
-            temp = var.size[0] if hasattr(var.size, '__len__') else var.size
+            temp = cpVectorizer.get_var_size(var)
             z_params_i.append(cp.Parameter((temp,), "admm_x_pz_{}_{}_{}".format(entry[X_NID], i, j)))
             u_params_i.append(cp.Parameter((temp,), "admm_x_pu_{}_{}_{}".format(entry[X_NID], i, j)))
         z_params.append(z_params_i)
@@ -278,7 +279,7 @@ def ADMM_x(lentry, solver, settings):
         ui = entry[u_index]
         # Add norm for Variables corresponding to the node
         for j, (varID, varName, var, offset) in enumerate(variables):
-            temp = var.size[0] if hasattr(var.size, '__len__') else var.size
+            temp = cpVectorizer.get_var_size(var)
             z_ = getValue(admm_context_z.edge_z_vals, zi + offset, temp)
             u_ = getValue(admm_context_z.edge_u_vals, ui + offset, temp)
             z = z_params[i][j]
@@ -321,7 +322,7 @@ def ADMM_z_problem(entry, rho=None, m_func=cp.Minimize):
 
     variables_i = entry[Z_IVARS]
     for i, (varID, varName, var, offset) in enumerate(variables_i):
-        temp = var.size[0] if hasattr(var.size, '__len__') else var.size
+        temp = cpVectorizer.get_var_size(var)
         x_i = cp.Parameter((temp,), "admm_z_px_i_{}".format(entry[X_NID], i))
         params_x_i.append(x_i)
         u_ij = cp.Parameter((temp,), "admm_z_pu_ij_{}".format(entry[X_NID], i))
@@ -336,7 +337,7 @@ def ADMM_z_problem(entry, rho=None, m_func=cp.Minimize):
 
     variables_j = entry[Z_JVARS]
     for i, (varID, varName, var, offset) in enumerate(variables_j):
-        temp = var.size[0] if hasattr(var.size, '__len__') else var.size
+        temp = cpVectorizer.get_var_size(var)
         x_j = cp.Parameter((temp,), "admm_z_px_j_{}".format(entry[X_NID], i))
         params_x_j.append(x_j)
         u_ji = cp.Parameter((temp,), "admm_z_pu_ji_{}".format(entry[X_NID], i))
@@ -368,7 +369,7 @@ def ADMM_z(lentry, solver, settings):
 
     variables_i = entry[Z_IVARS]
     for i, (varID, varName, var, offset) in enumerate(variables_i):
-        temp = var.size[0] if hasattr(var.size, '__len__') else var.size
+        temp = cpVectorizer.get_var_size(var)
         x_i = getValue(admm_context_x.node_vals, entry[Z_XIIND] + offset, temp)
         u_ij = getValue(admm_context_z.edge_u_vals, entry[Z_UIJIND] + offset, temp)
         params_x_i[i].value = x_i
@@ -376,7 +377,7 @@ def ADMM_z(lentry, solver, settings):
 
     variables_j = entry[Z_JVARS]
     for i, (varID, varName, var, offset) in enumerate(variables_j):
-        temp = var.size[0] if hasattr(var.size, '__len__') else var.size
+        temp = cpVectorizer.get_var_size(var)
         x_j = getValue(admm_context_x.node_vals, entry[Z_XJIND] + offset, temp)
         u_ji = getValue(admm_context_z.edge_u_vals, entry[Z_UJIIND] + offset, temp)
         params_x_j[i].value = x_j
@@ -421,17 +422,9 @@ def setValue(shared, idx, size, val):
     shared[idx:idx+size] = np.asarray(val)
 
 
-# Write the values for all of the Variables involved in a given Objective to
-# the given shared Array.
-# variables should be an entry from the node_values structure.
-# def writeObjective(shared, idx, objective, variables, devectorize):
-#     for v in objective.variables():
-#         for (varID, varName, var, offset) in variables:
-#             if varID == v.id:
-#                 # vectorize variable
-#                 setValue(shared, idx + offset, npVectorizer.auto(np.array(v.value))[0])
-#                 break
 def writeObjective(shared, idx, objective, variables, devectorize):
     for (varID, varName, var, offset) in variables:
-        size = var.size[0] if hasattr(var.size, '__len__') else var.size
-        setValue(shared, idx + offset, size, npVectorizer.auto(np.array(var.value))[0])
+        size = cpVectorizer.get_var_size(var)
+        val = np.array(var.value)
+        val_vec = npVectorizer.auto(val, var)
+        setValue(shared, idx + offset, size, val_vec)

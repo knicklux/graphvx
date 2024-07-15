@@ -183,9 +183,11 @@ class GraphVX:
                 etup = (nid, neighborid)
                 econ = copy(self.edge_constraints[etup])
                 con += econ
+
             # Calculate sum of dimensions of all Variables for this node
-            size = sum([var.size[0] if hasattr(var.size, '__len__') else var.size for (varID, varName, var, offset) in
-                        variables])
+
+            size = sum([cpVectorizer.get_var_size(var) for (varID, varName, var, offset) in variables])
+
             # Nearly complete information package for this node
             node_info[nid] = (nid, obj, variables, con, x_length, size, deg, list(neighbors))
             x_length += size
@@ -229,22 +231,16 @@ class GraphVX:
         # Each row of A has one 1. There is a 1 at (i,j) if z_i = x_j.
         A = lil_matrix((z_length, x_length), dtype=np.int32)
         for etup in self.edge_ids:
-            # print("new etup")
-            # print(etup)
             info_edge = edge_info[etup]
             info_i = node_info[etup[0]]
             info_j = node_info[etup[1]]
             for offset in range(info_i[X_LEN]):
-                # print(info_edge[Z_ZIJIND])
                 row = info_edge[Z_ZIJIND] + offset
                 col = info_i[X_IND] + offset
-                # print("Bulidng A from i: {}, {}".format(row, col))
                 A[row, col] = 1
             for offset in range(info_j[X_LEN]):
-                # print(info_edge[Z_ZJIIND])
                 row = info_edge[Z_ZJIIND] + offset
                 col = info_j[X_IND] + offset
-                # print("Bulidng A from j: {}, {}".format(row, col))
                 A[row, col] = 1
 
         self.A = A
@@ -278,7 +274,7 @@ class GraphVX:
             vals = np.zeros((entry[X_LEN],))
 
             for (varID, varName, var, offset) in entry[X_VARS]:
-                size = var.size[0] if hasattr(var.size, '__len__') else var.size
+                size = cpVectorizer.get_var_size(var)
                 vals[offset:offset + size] = x[index+offset:index+offset+size]
             self.node_values[nid] = vals
 

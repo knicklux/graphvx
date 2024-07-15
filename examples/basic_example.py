@@ -35,11 +35,11 @@ def update_rho_heuristic(rho, r, thr_p, s,  thr_d, k, tau_inc=1.3, tau_dec=1.3, 
 
 
 def main():
-    digraph = nx.DiGraph(nx.circulant_graph(32, [1]))
+    # digraph = nx.DiGraph(nx.circulant_graph(32, [1]))
     # digraph = nx.DiGraph(nx.circulant_graph(8, [2]))
     # digraph = nx.DiGraph(nx.star_graph(64-1))
     # digraph = nx.DiGraph(nx.barbell_graph(8, 8))
-    # digraph = nx.DiGraph(nx.wheel_graph(32-1))
+    digraph = nx.DiGraph(nx.wheel_graph(32-1))
 
     adj = copy(nx.to_numpy_array(digraph))
     # print(adj)
@@ -100,8 +100,12 @@ def main():
         chunk_size = 8096
         dispatcher_x = gvx.MultiProcessingDispatcher(i_s_x.solve_handle(), gvx.UpdateType.X, n_proc, chunk_size)
         dispatcher_z = gvx.MultiProcessingDispatcher(i_s_z.solve_handle(), gvx.UpdateType.Z, n_proc, chunk_size)
+        # dispatcher_x = gvx.SequentialDispatcher(i_s_x.solve_handle(), gvx.UpdateType.X)
+        # dispatcher_z = gvx.SequentialDispatcher(i_s_z.solve_handle(), gvx.UpdateType.Z)
         # 3) create iteration scheme
         i_s = gvx.ADMMVanillaIteration()
+        # i_s = gvx.ADMMNesterovIteration()
+        # i_s = gvx.ADMMNesterovResetIteration()
 
         optimizer = gvx.GraphvxSolver(g, dispatcher_x, dispatcher_z, i_s_x, i_s_z, i_s)
 

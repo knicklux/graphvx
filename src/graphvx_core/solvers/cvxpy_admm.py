@@ -88,8 +88,6 @@ class GraphvxSolver:
         # examine structure of the constraints
         A = self.graphvx.A
         A_ar = A.toarray()
-        print(A_ar.shape)
-        # print(A_ar)
         print(f"Non-zero entries in constraints {np.count_nonzero(A_ar > 0)} of {A_ar.shape[0] * A_ar.shape[1]}")
         print(f"Condition number in constraints {np.linalg.cond(A_ar)}")
 
