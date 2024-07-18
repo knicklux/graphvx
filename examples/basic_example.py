@@ -1,12 +1,21 @@
 from copy import copy
 import warnings
 from datetime import datetime
+from enum import Enum
 
 import cvxpy as cp
 import networkx as nx
 import numpy as np
 
 import graphvx_core as gvx
+
+
+class Mode(Enum):
+
+    SCALAR = 1
+    VECTOR = 2
+    SDP = 3
+    Matrix = 4
 
 
 def update_rho_heuristic(rho, r, thr_p, s,  thr_d, k, tau_inc=1.3, tau_dec=1.3, mu=4, rho_min=1e-6, rho_max=1e6):
@@ -36,10 +45,12 @@ def update_rho_heuristic(rho, r, thr_p, s,  thr_d, k, tau_inc=1.3, tau_dec=1.3, 
 
 def main():
     # digraph = nx.DiGraph(nx.circulant_graph(32, [1]))
-    # digraph = nx.DiGraph(nx.circulant_graph(8, [2]))
+    digraph = nx.DiGraph(nx.circulant_graph(8, [2]))
     # digraph = nx.DiGraph(nx.star_graph(64-1))
     # digraph = nx.DiGraph(nx.barbell_graph(8, 8))
-    digraph = nx.DiGraph(nx.wheel_graph(32-1))
+    # digraph = nx.DiGraph(nx.wheel_graph(32-1))
+    # digraph = nx.DiGraph(nx.grid_graph(dim=(2, 3, 4)))
+    # digraph = nx.DiGraph(nx.grid_graph(dim=(5, 5)))
 
     adj = copy(nx.to_numpy_array(digraph))
     # print(adj)
@@ -52,12 +63,29 @@ def main():
     big_n = 3
 
     def node_f(i):
-        x = cp.Variable((big_n, big_n), name='x_{}'.format(i), PSD=True)
-        # x = cvxpy.Variable((big_n,), name='x_{}'.format(i))
+
+        mode: Mode = Mode.Matrix
+
+        if mode == Mode.SCALAR:
+            x = cp.Variable(name='x_{}'.format(i))
+            tgt = i
+        elif mode == Mode.VECTOR:
+            x = cp.Variable((big_n,), name='x_{}'.format(i))
+            tgt = np.array([1, 2, 3]) * i
+        elif mode == Mode.SDP:
+            x = cp.Variable((big_n, big_n), name='x_{}'.format(i), PSD=True)
+            tgt = np.eye(big_n) * i
+            # tgt = np.ones((big_n, big_n)) * i
+        elif mode == Mode.Matrix:
+            x = cp.Variable((big_n, big_n), name='x_{}'.format(i), PSD=False)
+            # tgt = np.eye(big_n) * i
+            tgt = np.ones((big_n, big_n)) * i
+        else:
+            x = 0
+            tgt = 0
+
         variables.append(x)
-        tgt = np.eye(big_n) * i
-        # tgt = np.ones((big_n,)) * i
-        # tgt = np.array([1,2,3]) * i
+
         obj = cp.sum_squares(x - tgt)
         constr = [0 <= x, x <= n_max]
         id = i

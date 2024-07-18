@@ -89,7 +89,7 @@ class cpVectorizer():
             n = v.shape[0]
             return int((n) * (n + 1) / 2)
         else:
-            return v.size[0]
+            return v.size[0] if hasattr(v.size, '__len__') else v.size
 
     @staticmethod
     def is_psd_matrix(var):
