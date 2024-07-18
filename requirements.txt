@@ -1,0 +1,10 @@
+numpy
+cvxpy
+networkx
+tqdm
+joblib
+clarabel
+scs
+sdpa-multiprecision
+osqp
+scipy
